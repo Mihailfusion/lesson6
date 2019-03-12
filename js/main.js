@@ -1,4 +1,4 @@
-//  'use strict';
+ 'use strict';
 
 let start = document.getElementById('start'),
   budgetValue = document.getElementsByClassName('budget-value'),
@@ -35,9 +35,10 @@ let appData = {
   income: [],
   savings: false
 };
-
+let ok = false;
 // start();
 start.addEventListener('click', function () {
+  ok = true;
   time = prompt("Введите дату в формате YYYY-MM-DD", '');
   money = +prompt("Ваш бюджет на месяц?", ''); //бюджет
 
@@ -54,8 +55,15 @@ start.addEventListener('click', function () {
   dayValue.value = new Date(Date.parse(time)).getDay();
 });
 
+
+let sum = 0;
+
+
 expensesBtn.addEventListener('click', function () {
-  let sum = 0;
+  if (ok == false) {
+    alert('Нажмите - "Начать расчет"')
+  } else {
+  
   for (let i = 0; i < expensesInput.length; i++) {
     let a = expensesInput[i].value,
       b = expensesInput[++i].value;
@@ -75,12 +83,14 @@ expensesBtn.addEventListener('click', function () {
     }
   }
   expensesValue[0].textContent = sum;
+  console.log(sum);
+  
+}
 });
-
-
-
 optionalExpensesBtn.addEventListener('click', function () {
-
+  if (ok == false) {
+    alert('Нажмите - "Начать расчет"')
+  } else {
 
   for (let i = 0; i < optionalExpensesItem.length; i++) {
     let opt = optionalExpensesItem[i].value;
@@ -90,13 +100,15 @@ optionalExpensesBtn.addEventListener('click', function () {
     optionalExpensesValue[0].textContent += appData.optionalExpenses[i] + ' ';
     console.log(appData);
   };
-});
-
+}});
 countBudgetBtn.addEventListener('click', function () {
+  if (ok == false) {
+    alert('Нажмите - "Начать расчет"')
+  } else {
   if (appData.budget != undefined) {
 
-    appData.moneyPerDay = (appData.budget / 30).toFixed();
-    daybudgetValue[0].textContent = appData.moneyPerDay
+    appData.moneyPerDay = ((appData.budget - sum) / 30).toFixed();
+    daybudgetValue[0].textContent = appData.moneyPerDay;
     if (appData.moneyPerDay < 100) {
       levelValue.textContent = "Минимальный уровень достатка";
     } else if (appData.moneyPerDay > 100 && appData.moneyPerDay < 2000) {
@@ -110,15 +122,12 @@ countBudgetBtn.addEventListener('click', function () {
   } else {
     daybudgetValue[0].textContent = 'Произошла ошибка';
   }
-})
-
-
+}});
 incomeItem.addEventListener('input', function () {
   let items = incomeItem.value;
   appData.income = items.split(', ');
   incomeValue.textContent = appData.income;
 })
-
 savingValue.addEventListener('click', function () {
   if (appData.savings == true) {
     appData.savings = false;
@@ -126,7 +135,6 @@ savingValue.addEventListener('click', function () {
     appData.savings = true;
   }
 });
-
 sumValue.addEventListener('input', function () {
   if (appData.savings == true) {
     let sum = +sumValue.value,
